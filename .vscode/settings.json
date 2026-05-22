@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "ostream": "cpp",
+        "vector": "cpp"
+    },
+    "git.ignoreLimitWarning": true,
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.autoSave": "onFocusChange",
+    "C_Cpp.intelliSenseEngineFallback": "Disabled"
+}

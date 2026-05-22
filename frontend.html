@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artéa Gallery</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Space+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0806;
+            --surface: #12100d;
+            --gold: #c9a84c;
+            --gold-light: #e8c97a;
+            --cream: #f5f0e8;
+            --muted: #6b6058;
+            --accent: #8b4a2f;
+            --tushti: #b56fa8;
+            --vaibhav: #4a8bb5;
+            --tosif: #6bb54a;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--cream);
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        .cursor {
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width .3s, height .3s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-ring {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform .18s ease, width .3s, height .3s, opacity .3s;
+            opacity: .6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            opacity: .35;
+        }
+
+        /* HERO */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a1208 0%, #0a0806 100%);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: .12;
+            animation: drift 20s ease-in-out infinite;
+        }
+
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: var(--gold);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb2 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 50%;
+            right: -80px;
+            animation-delay: -7s;
+        }
+
+        .orb3 {
+            width: 250px;
+            height: 250px;
+            background: #4a6b8b;
+            bottom: -80px;
+            left: 30%;
+            animation-delay: -13s;
+        }
+
+        @keyframes drift {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -40px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 30px) scale(.9);
+            }
+        }
+
+        .hline {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            height: 1px;
+            opacity: .3;
+            animation: lineGlow 4s ease-in-out infinite;
+        }
+
+        .hline1 {
+            width: 60%;
+            top: 25%;
+            left: 20%;
+        }
+
+        .hline2 {
+            width: 40%;
+            bottom: 25%;
+            left: 30%;
+            animation-delay: -2s;
+        }
+
+        @keyframes lineGlow {
+
+            0%,
+            100% {
+                opacity: .15;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: .7rem;
+            letter-spacing: .4em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 1s ease .3s forwards;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 12vw, 9rem);
+            font-weight: 400;
+            line-height: .9;
+            letter-spacing: -.02em;
+            opacity: 0;
+            animation: fadeUp 1.2s ease .6s forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--gold-light);
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--muted);
+            margin-top: 2rem;
+            letter-spacing: .05em;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .3em;
+            color: var(--muted);
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1s ease 1.6s forwards;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollLine 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollLine {
+            0% {
+                transform: scaleY(0);
+                transform-origin: top;
+            }
+
+            50% {
+                transform: scaleY(1);
+                transform-origin: top;
+            }
+
+            51% {
+                transform: scaleY(1);
+                transform-origin: bottom;
+            }
+
+            100% {
+                transform: scaleY(0);
+                transform-origin: bottom;
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            transition: background .4s;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 8, 6, .85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(201, 168, 76, .1);
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            letter-spacing: .05em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: .8rem;
+            letter-spacing: .2em;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            transition: color .3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 100%;
+            height: 1px;
+            background: var(--gold);
+            transition: right .3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold-light);
+        }
+
+        .nav-links a:hover::after {
+            right: 0;
+        }
+
+        /* SECTION */
+        .section {
+            padding: 8rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .4em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .eyebrow::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+        }
+
+        .sec-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .sec-title em {
+            font-style: italic;
+            color: var(--gold-light);
+        }
+
+        /* GALLERY SELECTOR CARDS */
+        .gallery-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 3.5rem 0 5rem;
+        }
+
+        .gcard {
+            position: relative;
+            overflow: hidden;
+            cursor: none;
+            border: 1px solid rgba(201, 168, 76, .12);
+            padding: 2.5rem 2rem;
+            background: var(--surface);
+            transition: border-color .4s, transform .4s;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .gcard.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gcard::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .5s cubic-bezier(.25, .46, .45, .94);
+        }
+
+        .gcard.tushti::after {
+            background: linear-gradient(90deg, var(--tushti), #e8a5da);
+        }
+
+        .gcard.vaibhav::after {
+            background: linear-gradient(90deg, var(--vaibhav), #7ab8e0);
+        }
+
+        .gcard.tosif::after {
+            background: linear-gradient(90deg, var(--tosif), #a5e87a);
+        }
+
+        .gcard:hover {
+            border-color: rgba(201, 168, 76, .3);
+            transform: translateY(-6px);
+        }
+
+        .gcard:hover::after {
+            transform: scaleX(1);
+        }
+
+        .gc-av {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform .4s;
+        }
+
+        .gcard:hover .gc-av {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        .tushti .gc-av {
+            background: rgba(181, 111, 168, .15);
+            color: var(--tushti);
+            border: 1px solid rgba(181, 111, 168, .3);
+        }
+
+        .vaibhav .gc-av {
+            background: rgba(74, 139, 181, .15);
+            color: var(--vaibhav);
+            border: 1px solid rgba(74, 139, 181, .3);
+        }
+
+        .tosif .gc-av {
+            background: rgba(107, 181, 74, .15);
+            color: var(--tosif);
+            border: 1px solid rgba(107, 181, 74, .3);
+        }
+
+        .gc-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: .3rem;
+        }
+
+        .gc-reg {
+            font-family: 'Space Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: .3em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+        }
+
+        .gc-count {
+            font-family: 'Space Mono', monospace;
+            font-size: .7rem;
+            color: var(--muted);
+            letter-spacing: .1em;
+        }
+
+        .gc-count b {
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-right: .3rem;
+        }
+
+        .tushti .gc-count b {
+            color: var(--tushti);
+        }
+
+        .vaibhav .gc-count b {
+            color: var(--vaibhav);
+        }
+
+        .tosif .gc-count b {
+            color: var(--tosif);
+        }
+
+        .gc-arrow {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            font-size: 1rem;
+            color: var(--muted);
+            transition: color .3s, transform .4s;
+        }
+
+        .gcard:hover .gc-arrow {
+            transform: translate(4px, -4px);
+        }
+
+        .tushti:hover .gc-arrow {
+            color: var(--tushti);
+        }
+
+        .vaibhav:hover .gc-arrow {
+            color: var(--vaibhav);
+        }
+
+        .tosif:hover .gc-arrow {
+            color: var(--tosif);
+        }
+
+        /* INDIVIDUAL VIEW */
+        #galleryView {
+            display: none;
+        }
+
+        .gallery-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(201, 168, 76, .1);
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(201, 168, 76, .2);
+            color: var(--muted);
+            font-family: 'Space Mono', monospace;
+            font-size: .7rem;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            padding: .7rem 1.2rem;
+            cursor: none;
+            transition: all .3s;
+        }
+
+        .back-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .gh-av {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .av-tushti {
+            background: rgba(181, 111, 168, .15);
+            color: var(--tushti);
+            border: 1px solid rgba(181, 111, 168, .3);
+        }
+
+        .av-vaibhav {
+            background: rgba(74, 139, 181, .15);
+            color: var(--vaibhav);
+            border: 1px solid rgba(74, 139, 181, .3);
+        }
+
+        .av-tosif {
+            background: rgba(107, 181, 74, .15);
+            color: var(--tosif);
+            border: 1px solid rgba(107, 181, 74, .3);
+        }
+
+        .gh-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+        }
+
+        .gh-name em {
+            font-style: italic;
+        }
+
+        .gh-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            color: var(--muted);
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            margin-top: .3rem;
+        }
+
+        .color-bar {
+            height: 2px;
+            width: 0;
+            margin-top: .8rem;
+            border-radius: 2px;
+            animation: barGrow .6s ease forwards;
+        }
+
+        @keyframes barGrow {
+            to {
+                width: 60px;
+            }
+        }
+
+        .bar-tushti {
+            background: linear-gradient(90deg, var(--tushti), #e8a5da);
+        }
+
+        .bar-vaibhav {
+            background: linear-gradient(90deg, var(--vaibhav), #7ab8e0);
+        }
+
+        .bar-tosif {
+            background: linear-gradient(90deg, var(--tosif), #a5e87a);
+        }
+
+        /* GRID */
+        .ggrid {
+            columns: 3 300px;
+            gap: 1.5rem;
+        }
+
+        .gitem {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            cursor: none;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity .7s, transform .7s;
+        }
+
+        .gitem.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gitem img {
+            width: 100%;
+            display: block;
+            transition: transform .8s cubic-bezier(.25, .46, .45, .94);
+        }
+
+        .gitem:hover img {
+            transform: scale(1.06);
+        }
+
+        .gitem-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 8, 6, .9) 0%, rgba(10, 8, 6, .2) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity .4s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+
+        .gitem:hover .gitem-overlay {
+            opacity: 1;
+        }
+
+        .gitem-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            color: var(--cream);
+            transform: translateY(10px);
+            transition: transform .4s .05s;
+        }
+
+        .gitem-meta {
+            font-family: 'Space Mono', monospace;
+            font-size: .6rem;
+            letter-spacing: .2em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-top: .3rem;
+            transform: translateY(10px);
+            transition: transform .4s .1s;
+        }
+
+        .gitem:hover .gitem-title,
+        .gitem:hover .gitem-meta {
+            transform: translateY(0);
+        }
+
+        .gitem-del {
+            position: absolute;
+            top: .8rem;
+            right: .8rem;
+            background: rgba(139, 74, 47, .85);
+            border: 1px solid rgba(201, 168, 76, .3);
+            color: var(--cream);
+            font-family: 'Space Mono', monospace;
+            font-size: .6rem;
+            padding: .3rem .7rem;
+            cursor: none;
+            opacity: 0;
+            transition: opacity .4s;
+        }
+
+        .gitem:hover .gitem-del {
+            opacity: 1;
+        }
+
+        .gitem-del:hover {
+            background: #c0392b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            opacity: .2;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        /* UPLOAD */
+        .upload-area {
+            background: var(--surface);
+            border: 1px solid rgba(201, 168, 76, .15);
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: .3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .owner-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(201, 168, 76, .15);
+            width: fit-content;
+        }
+
+        .otab {
+            padding: .65rem 1.5rem;
+            background: transparent;
+            border: none;
+            font-family: 'Space Mono', monospace;
+            font-size: .7rem;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            cursor: none;
+            transition: all .3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .otab:not(.active):hover {
+            color: var(--cream);
+            background: rgba(255, 255, 255, .03);
+        }
+
+        .otab.tushti-tab.active {
+            color: var(--tushti);
+            background: rgba(181, 111, 168, .1);
+            border-bottom-color: var(--tushti);
+        }
+
+        .otab.vaibhav-tab.active {
+            color: var(--vaibhav);
+            background: rgba(74, 139, 181, .1);
+            border-bottom-color: var(--vaibhav);
+        }
+
+        .otab.tosif-tab.active {
+            color: var(--tosif);
+            background: rgba(107, 181, 74, .1);
+            border-bottom-color: var(--tosif);
+        }
+
+        .uform {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .fg {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .fg.full {
+            grid-column: 1/-1;
+        }
+
+        .flabel {
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .25em;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+
+        .finput,
+        .fselect {
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(201, 168, 76, .15);
+            color: var(--cream);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            padding: .85rem 1rem;
+            outline: none;
+            transition: border-color .3s, background .3s;
+            width: 100%;
+        }
+
+        .finput:focus,
+        .fselect:focus {
+            border-color: var(--gold);
+            background: rgba(201, 168, 76, .05);
+        }
+
+        .fselect option {
+            background: var(--surface);
+        }
+
+        .dzone {
+            border: 1px dashed rgba(201, 168, 76, .3);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all .3s;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dzone:hover,
+        .dzone.dragover {
+            border-color: var(--gold);
+            background: rgba(201, 168, 76, .04);
+        }
+
+        .dzone input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: none;
+        }
+
+        .dzone-icon {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: .8rem;
+            display: block;
+            transition: transform .3s;
+        }
+
+        .dzone:hover .dzone-icon {
+            transform: translateY(-4px) scale(1.1);
+        }
+
+        .dzone-text {
+            font-size: .95rem;
+            color: var(--muted);
+        }
+
+        .dzone-text strong {
+            color: var(--gold-light);
+        }
+
+        #previewGrid {
+            display: none;
+            margin-top: 1.5rem;
+        }
+
+        #pgLabel {
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            color: var(--gold);
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            margin-bottom: .8rem;
+            display: block;
+        }
+
+        .pthumbs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: .6rem;
+        }
+
+        .pthumb {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+        }
+
+        .pthumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .pthumb-n {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, .6);
+            font-family: 'Space Mono', monospace;
+            font-size: .55rem;
+            color: var(--gold);
+            text-align: center;
+            padding: 2px;
+        }
+
+        .sbtn {
+            grid-column: 1/-1;
+            padding: 1.1rem 2.5rem;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            letter-spacing: .1em;
+            cursor: none;
+            position: relative;
+            overflow: hidden;
+            transition: color .4s;
+        }
+
+        .sbtn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .4s cubic-bezier(.25, .46, .45, .94);
+            z-index: -1;
+        }
+
+        .sbtn:hover {
+            color: var(--bg);
+        }
+
+        .sbtn:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* LIGHTBOX */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .95);
+            z-index: 800;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.open {
+            display: flex;
+            animation: lbFade .3s ease;
+        }
+
+        @keyframes lbFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .lb-inner {
+            position: relative;
+            max-width: 90vw;
+            animation: lbZoom .4s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        @keyframes lbZoom {
+            from {
+                transform: scale(.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        #lbImg {
+            max-width: 90vw;
+            max-height: 80vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .lb-caption {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--cream);
+        }
+
+        .lb-caption span {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .2em;
+            color: var(--gold);
+            margin-top: .3rem;
+        }
+
+        .lb-close {
+            position: absolute;
+            top: -2.5rem;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 1.5rem;
+            cursor: none;
+            transition: color .3s;
+        }
+
+        .lb-close:hover {
+            color: var(--gold);
+        }
+
+        .lb-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: 1px solid rgba(201, 168, 76, .3);
+            color: var(--gold);
+            font-size: 1.2rem;
+            padding: .6rem .9rem;
+            cursor: none;
+            transition: all .3s;
+        }
+
+        .lb-nav:hover {
+            background: rgba(201, 168, 76, .1);
+            border-color: var(--gold);
+        }
+
+        .lb-prev {
+            right: calc(100% + 1rem);
+        }
+
+        .lb-next {
+            left: calc(100% + 1rem);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--surface);
+            border: 1px solid var(--gold);
+            color: var(--cream);
+            padding: 1rem 1.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: .75rem;
+            letter-spacing: .1em;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all .4s cubic-bezier(.34, 1.56, .64, 1);
+            z-index: 900;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ABOUT */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .acard {
+            border: 1px solid rgba(201, 168, 76, .12);
+            padding: 2rem;
+        }
+
+        .acard-label {
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            color: var(--gold);
+            letter-spacing: .3em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .acard-body {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid rgba(201, 168, 76, .1);
+            padding: 3rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        footer p {
+            font-family: 'Space Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .2em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .8s, transform .8s;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media(max-width:900px) {
+            .gallery-selector {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section {
+                padding: 5rem 1.5rem;
+            }
+
+            .uform {
+                grid-template-columns: 1fr;
+            }
+
+            .ggrid {
+                columns: 1 260px;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .lb-nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <nav id="navbar">
+        <div class="nav-logo">Artéa</div>
+        <div class="nav-links">
+            <a href="#collection">Collection</a>
+            <a href="#upload">Upload</a>
+            <a href="#about">About</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+        <div class="hline hline1"></div>
+        <div class="hline hline2"></div>
+        <div class="hero-content">
+            <p class="hero-eyebrow">B.Tech AI-DS &nbsp;·&nbsp; 4th Semester Project</p>
+            <h1 class="hero-title">Artéa<br><em>Gallery</em></h1>
+            <p class="hero-sub">Three Artists &nbsp;·&nbsp; One Canvas</p>
+        </div>
+        <div class="hero-scroll">
+            <div class="scroll-line"></div><span>Scroll</span>
+        </div>
+    </section>
+
+    <!-- COLLECTION -->
+    <section id="collection" style="background:var(--bg);">
+        <div class="section">
+            <p class="eyebrow reveal">Collection</p>
+            <h2 class="sec-title reveal">Choose a <em>Gallery</em></h2>
+            <p class="reveal" style="color:var(--muted);font-size:1.05rem;margin-bottom:0;max-width:440px;">Three
+                personal galleries — click to explore each artist's work.</p>
+
+            <div class="gallery-selector" id="galSelector">
+                <div class="gcard tushti reveal" data-owner="tushti" style="transition-delay:.1s">
+                    <div class="gc-av">T</div>
+                    <div class="gc-name">Tushti's Gallery</div>
+                    <div class="gc-reg">Tushti Garg &nbsp;·&nbsp; 2024/17425</div>
+                    <div class="gc-count"><b id="cntTushti">0</b> artworks</div>
+                    <div class="gc-arrow">↗</div>
+                </div>
+                <div class="gcard vaibhav reveal" data-owner="vaibhav" style="transition-delay:.2s">
+                    <div class="gc-av">V</div>
+                    <div class="gc-name">Vaibhav's Gallery</div>
+                    <div class="gc-reg">Vaibhav Jain &nbsp;·&nbsp; 2024/19216</div>
+                    <div class="gc-count"><b id="cntVaibhav">0</b> artworks</div>
+                    <div class="gc-arrow">↗</div>
+                </div>
+                <div class="gcard tosif reveal" data-owner="tosif" style="transition-delay:.3s">
+                    <div class="gc-av">T</div>
+                    <div class="gc-name">Tosif's Gallery</div>
+                    <div class="gc-reg">Tosif &nbsp;·&nbsp; 2024/18462</div>
+                    <div class="gc-count"><b id="cntTosif">0</b> artworks</div>
+                    <div class="gc-arrow">↗</div>
+                </div>
+            </div>
+
+            <!-- Individual gallery view -->
+            <div id="galleryView">
+                <div class="gallery-header">
+                    <button class="back-btn" id="backBtn">← All Galleries</button>
+                    <div class="gh-av" id="ghAv"></div>
+                    <div>
+                        <div class="gh-name" id="ghName"></div>
+                        <div class="gh-meta" id="ghMeta"></div>
+                        <div class="color-bar" id="ghBar"></div>
+                    </div>
+                </div>
+                <div class="ggrid" id="ggrid"></div>
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">◻</div>
+                    <p>No artworks yet — upload some in the Upload section below.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UPLOAD -->
+    <section id="upload" style="background:#0d0b09;border-top:1px solid rgba(201,168,76,.08);">
+        <div class="section">
+            <p class="eyebrow reveal">Contribute</p>
+            <h2 class="sec-title reveal">Upload <em>Artwork</em></h2>
+            <p class="reveal" style="color:var(--muted);font-size:1.05rem;margin-bottom:3rem;max-width:500px;">Choose
+                whose gallery, fill in details, then select <strong style="color:var(--gold-light);">multiple photos at
+                    once</strong> — perfect for uploading all 12 together.</p>
+            <div class="upload-area reveal">
+                <div class="owner-tabs">
+                    <button class="otab tushti-tab active" data-owner="tushti">Tushti</button>
+                    <button class="otab vaibhav-tab" data-owner="vaibhav">Vaibhav</button>
+                    <button class="otab tosif-tab" data-owner="tosif">Tosif</button>
+                </div>
+                <form class="uform" id="uploadForm">
+                    <div class="fg">
+                        <label class="flabel">Base Title</label>
+                        <input class="finput" type="text" id="artTitle" placeholder="e.g. Landscape or Untitled">
+                    </div>
+                    <div class="fg">
+                        <label class="flabel">Year</label>
+                        <input class="finput" type="text" id="artYear" placeholder="2024">
+                    </div>
+                    <div class="fg full">
+                        <label class="flabel">Select Images * &nbsp;<span
+                                style="color:var(--muted);font-size:.6rem;letter-spacing:.1em;">hold Ctrl / Cmd to pick
+                                multiple</span></label>
+                        <div class="dzone" id="dzone">
+                            <input type="file" id="artImages" accept="image/*" multiple>
+                            <span class="dzone-icon">⬆</span>
+                            <div class="dzone-text" id="dzText"><strong>Click or drag & drop</strong> — select all 12 at
+                                once<br><small style="opacity:.5;font-size:.8rem;margin-top:.3rem;display:block;">JPG,
+                                    PNG, WebP, GIF</small></div>
+                        </div>
+                        <div id="previewGrid">
+                            <span id="pgLabel">Preview</span>
+                            <div class="pthumbs" id="pthumbs"></div>
+                        </div>
+                    </div>
+                    <button type="submit" class="sbtn" id="sbtn">Add to Gallery</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" style="background:var(--bg);border-top:1px solid rgba(201,168,76,.08);">
+        <div class="section">
+            <p class="eyebrow reveal">Project Info</p>
+            <h2 class="sec-title reveal"><em>Responsive</em> Art Gallery</h2>
+            <div class="about-grid">
+                <div class="acard reveal">
+                    <div class="acard-label">Team</div>
+                    <div class="acard-body">Tosif · 2024/17099<br>Tushti Garg · 2024/17425<br>Vaibhav Jain · 2024/19216
+                    </div>
+                </div>
+                <div class="acard reveal" style="transition-delay:.1s">
+                    <div class="acard-label">Stack</div>
+                    <div class="acard-body">HTML5 · CSS3 · Bootstrap 5<br>JavaScript ES6+<br>Node.js + Express.js</div>
+                </div>
+                <div class="acard reveal" style="transition-delay:.2s">
+                    <div class="acard-label">Programme</div>
+                    <div class="acard-body">B.Tech (AI-DS)<br>2nd Year · 4th Semester<br>Submitted to Mrs. Shrutika
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">Artéa</div>
+        <p>© 2024 · Responsive Art Gallery · B.Tech AI-DS</p>
+    </footer>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+        <div class="lb-inner">
+            <button class="lb-close" id="lbClose">✕</button>
+            <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+            <button class="lb-nav lb-next" id="lbNext">›</button>
+            <img id="lbImg" src="" alt="">
+            <div class="lb-caption"><span id="lbTitle"></span><span id="lbMeta"></span></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Cursor
+        const cur = document.getElementById('cursor'), ring = document.getElementById('cursorRing');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        (function ac() { cur.style.left = mx + 'px'; cur.style.top = my + 'px'; rx += (mx - rx) * .12; ry += (my - ry) * .12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(ac); })();
+        function addCursorHover(el) { el.addEventListener('mouseenter', () => { cur.style.width = '20px'; cur.style.height = '20px'; ring.style.width = '60px'; ring.style.height = '60px'; ring.style.opacity = '.3'; }); el.addEventListener('mouseleave', () => { cur.style.width = '12px'; cur.style.height = '12px'; ring.style.width = '36px'; ring.style.height = '36px'; ring.style.opacity = '.6'; }); }
+        document.querySelectorAll('a,button,.gcard,.gitem,.dzone').forEach(addCursorHover);
+
+        // Nav scroll
+        window.addEventListener('scroll', () => document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60));
+
+        // Reveal
+        const ro = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 });
+        document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+        // State
+        const OWNERS = {
+            tushti: { name: "Tushti's Gallery", reg: '2024/17425', avClass: 'av-tushti', bar: 'bar-tushti' },
+            vaibhav: { name: "Vaibhav's Gallery", reg: '2024/19216', avClass: 'av-vaibhav', bar: 'bar-vaibhav' },
+            tosif: { name: "Tosif's Gallery", reg: '2024/18462', avClass: 'av-tosif', bar: 'bar-tosif' }
+        };
+        let DB = JSON.parse(localStorage.getItem('artea_db') || '{}');
+        ['tushti', 'vaibhav', 'tosif'].forEach(o => { if (!DB[o]) DB[o] = []; });
+        function save() { localStorage.setItem('artea_db', JSON.stringify(DB)); }
+
+        let curOwner = null, upOwner = 'tushti', lbItems = [], lbIdx = 0;
+
+        function updateCounts() {
+            document.getElementById('cntTushti').textContent = DB.tushti.length;
+            document.getElementById('cntVaibhav').textContent = DB.vaibhav.length;
+            document.getElementById('cntTosif').textContent = DB.tosif.length;
+        }
+        updateCounts();
+
+        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3200); }
+
+        // Gallery cards
+        document.querySelectorAll('.gcard').forEach(c => c.addEventListener('click', () => openGallery(c.dataset.owner)));
+
+        function openGallery(owner) {
+            curOwner = owner;
+            const info = OWNERS[owner];
+            document.getElementById('galSelector').style.display = 'none';
+            document.getElementById('galleryView').style.display = 'block';
+            const av = document.getElementById('ghAv');
+            av.textContent = owner.charAt(0).toUpperCase();
+            av.className = 'gh-av ' + info.avClass;
+            document.getElementById('ghName').innerHTML = info.name.replace("'s Gallery", "'s <em>Gallery</em>");
+            document.getElementById('ghMeta').textContent = 'Reg. ' + info.reg;
+            const bar = document.getElementById('ghBar');
+            bar.className = 'color-bar ' + info.bar;
+            renderGrid(owner);
+            document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
+            // pre-select upload tab to match
+            document.querySelectorAll('.otab').forEach(b => b.classList.remove('active'));
+            document.querySelector('.otab.' + owner + '-tab').classList.add('active');
+            upOwner = owner;
+        }
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            curOwner = null;
+            document.getElementById('galSelector').style.display = 'grid';
+            document.getElementById('galleryView').style.display = 'none';
+            updateCounts();
+        });
+
+        function renderGrid(owner) {
+            const grid = document.getElementById('ggrid'), empty = document.getElementById('emptyState');
+            const items = DB[owner]; grid.innerHTML = '';
+            empty.style.display = items.length === 0 ? 'block' : 'none';
+            lbItems = [...items];
+            items.forEach((art, i) => {
+                const el = document.createElement('div');
+                el.className = 'gitem';
+                el.innerHTML = `<img src="${art.src}" alt="${art.title}" loading="lazy">
+      <div class="gitem-overlay"><div class="gitem-title">${art.title}</div><div class="gitem-meta">${art.year || ''}</div></div>
+      <button class="gitem-del" data-id="${art.id}">✕</button>`;
+                el.querySelector('img').addEventListener('click', () => openLightbox(i));
+                el.querySelector('.gitem-del').addEventListener('click', e => { e.stopPropagation(); DB[owner] = DB[owner].filter(a => a.id !== art.id); save(); renderGrid(owner); showToast('Artwork removed'); });
+                grid.appendChild(el);
+                setTimeout(() => el.classList.add('visible'), 60 * i);
+            });
+            document.querySelectorAll('.gitem,.gitem-del').forEach(addCursorHover);
+        }
+
+        // Lightbox
+        function openLightbox(idx) { lbIdx = idx; updLb(); document.getElementById('lightbox').classList.add('open'); }
+        function updLb() { const a = lbItems[lbIdx]; document.getElementById('lbImg').src = a.src; document.getElementById('lbTitle').textContent = a.title; document.getElementById('lbMeta').textContent = (a.year ? a.year + ' · ' : '') + OWNERS[curOwner].name; }
+        document.getElementById('lbClose').addEventListener('click', () => document.getElementById('lightbox').classList.remove('open'));
+        document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); });
+        document.getElementById('lbPrev').addEventListener('click', () => { lbIdx = (lbIdx - 1 + lbItems.length) % lbItems.length; updLb(); });
+        document.getElementById('lbNext').addEventListener('click', () => { lbIdx = (lbIdx + 1) % lbItems.length; updLb(); });
+        document.addEventListener('keydown', e => {
+            if (!document.getElementById('lightbox').classList.contains('open')) return;
+            if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+            if (e.key === 'ArrowLeft') { lbIdx = (lbIdx - 1 + lbItems.length) % lbItems.length; updLb(); }
+            if (e.key === 'ArrowRight') { lbIdx = (lbIdx + 1) % lbItems.length; updLb(); }
+        });
+
+        // Upload tabs
+        document.querySelectorAll('.otab').forEach(btn => btn.addEventListener('click', () => {
+            document.querySelectorAll('.otab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            upOwner = btn.dataset.owner;
+        }));
+
+        // Multi-file handling
+        let pendingFiles = [];
+        const fileInput = document.getElementById('artImages'), previewGrid = document.getElementById('previewGrid'), pthumbs = document.getElementById('pthumbs'), pgLabel = document.getElementById('pgLabel');
+
+        fileInput.addEventListener('change', e => handleFiles(Array.from(e.target.files)));
+
+        function handleFiles(files) {
+            pendingFiles = files.filter(f => f.type.startsWith('image/'));
+            if (!pendingFiles.length) return;
+            pthumbs.innerHTML = '';
+            pgLabel.textContent = `Preview — ${pendingFiles.length} image${pendingFiles.length > 1 ? 's' : ''} selected`;
+            pendingFiles.forEach((file, i) => {
+                const r = new FileReader();
+                r.onload = ev => {
+                    const d = document.createElement('div'); d.className = 'pthumb';
+                    d.innerHTML = `<img src="${ev.target.result}" alt=""><div class="pthumb-n">${i + 1}</div>`;
+                    pthumbs.appendChild(d);
+                };
+                r.readAsDataURL(file);
+            });
+            previewGrid.style.display = 'block';
+            document.getElementById('dzText').innerHTML = `<strong>${pendingFiles.length} image${pendingFiles.length > 1 ? 's' : ''} ready</strong><br><small style="opacity:.5;font-size:.8rem;">Click to change selection</small>`;
+        }
+
+        const dzone = document.getElementById('dzone');
+        dzone.addEventListener('dragover', e => { e.preventDefault(); dzone.classList.add('dragover'); });
+        dzone.addEventListener('dragleave', () => dzone.classList.remove('dragover'));
+        dzone.addEventListener('drop', e => { e.preventDefault(); dzone.classList.remove('dragover'); handleFiles(Array.from(e.dataTransfer.files)); });
+
+        // Submit
+        document.getElementById('uploadForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const title = document.getElementById('artTitle').value.trim() || 'Untitled';
+            const year = document.getElementById('artYear').value.trim();
+            const owner = upOwner;
+            if (!pendingFiles.length) return showToast('Please select at least one image');
+            const btn = document.getElementById('sbtn');
+            btn.textContent = `Uploading ${pendingFiles.length} image${pendingFiles.length > 1 ? 's' : ''}...`;
+            btn.disabled = true;
+            let count = 0;
+            for (const file of pendingFiles) {
+                await new Promise(res => {
+                    const r = new FileReader();
+                    r.onload = ev => {
+                        DB[owner].unshift({ id: Date.now() + Math.random(), title: pendingFiles.length > 1 ? `${title} ${count + 1}` : title, year, src: ev.target.result });
+                        count++; res();
+                    };
+                    r.readAsDataURL(file);
+                });
+            }
+            save(); updateCounts();
+            // Reset form
+            document.getElementById('uploadForm').reset();
+            pendingFiles = [];
+            previewGrid.style.display = 'none';
+            pthumbs.innerHTML = '';
+            document.getElementById('dzText').innerHTML = `<strong>Click or drag & drop</strong> — select all 12 at once<br><small style="opacity:.5;font-size:.8rem;margin-top:.3rem;display:block;">JPG, PNG, WebP, GIF</small>`;
+            btn.textContent = 'Add to Gallery';
+            btn.disabled = false;
+            const n = owner.charAt(0).toUpperCase() + owner.slice(1);
+            showToast(`✦ ${count} artwork${count > 1 ? 's' : ''} added to ${n}'s Gallery`);
+            if (curOwner === owner) renderGrid(owner);
+            else openGallery(owner);
+        });
+    </script>
+</body>
+
+</html>
